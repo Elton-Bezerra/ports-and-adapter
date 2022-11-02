@@ -4,11 +4,31 @@ import (
 	"errors"
 
 	"github.com/asaskevich/govalidator"
+	"github.com/google/uuid"
 )
+
+type ProductServiceInterface interface {
+	Get(id string) (ProductInterface, error)
+	Create(name string, price float64) (ProductInterface, error)
+	Enable(product ProductInterface) (ProductInterface, error)
+	Disable(product ProductInterface) (ProductInterface, error)
+}
+
+type ProductReader interface {
+	Get(id string) (ProductInterface, error)
+}
+
+type ProductWriter interface {
+	Save(product ProductInterface) (ProductInterface, error)
+}
+
+type ProductPersistenceInterface interface {
+	ProductReader
+	ProductWriter
+}
 
 func init() {
 	govalidator.SetFieldsRequiredByDefault(true)
-
 }
 
 type ProductInterface interface {
@@ -31,6 +51,14 @@ type Product struct {
 	Name   string  `valid:"required"`
 	Price  float64 `valid:"float,optional"`
 	Status string  `valid:"required"`
+}
+
+func NewProduct() *Product {
+	product := Product{
+		ID:     uuid.NewString(),
+		Status: DISABLED,
+	}
+	return &product
 }
 
 func (p *Product) IsValid() (bool, error) {
