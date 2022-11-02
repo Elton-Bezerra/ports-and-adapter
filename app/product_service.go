@@ -4,11 +4,6 @@ type ProductService struct {
 	Persistence ProductPersistenceInterface
 }
 
-// Get(id string) (ProductInterface, error)
-// Create(name string, price float64) (ProductInterface, error)
-// Enable(product ProductInterface) (ProductInterface, error)
-// Disable(product ProductInterface) (ProductInterface, error)
-
 func (s *ProductService) Get(id string) (ProductInterface, error) {
 	product, err := s.Persistence.Get(id)
 	if err != nil {
@@ -16,4 +11,50 @@ func (s *ProductService) Get(id string) (ProductInterface, error) {
 	}
 
 	return product, nil
+}
+
+func (s *ProductService) Create(name string, price float64) (ProductInterface, error) {
+	product := NewProduct()
+	product.Name = name
+	product.Price = price
+
+	_, err := product.IsValid()
+	if err != nil {
+		return &Product{}, err
+	}
+
+	result, err := s.Persistence.Save(product)
+	if err != nil {
+		return &Product{}, err
+	}
+
+	return result, nil
+}
+
+func (s *ProductService) Enable(product ProductInterface) (ProductInterface, error) {
+	err := product.Enable()
+	if err != nil {
+		return &Product{}, err
+	}
+
+	result, err := s.Persistence.Save(product)
+	if err != nil {
+		return &Product{}, err
+	}
+
+	return result, nil
+}
+
+func (s *ProductService) Disable(product ProductInterface) (ProductInterface, error) {
+	err := product.Disable()
+	if err != nil {
+		return &Product{}, err
+	}
+
+	result, err := s.Persistence.Save(product)
+	if err != nil {
+		return &Product{}, err
+	}
+
+	return result, nil
 }
