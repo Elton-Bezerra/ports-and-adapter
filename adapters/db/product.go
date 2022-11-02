@@ -1,0 +1,33 @@
+package db
+
+import (
+	"database/sql"
+
+	"github.com/Elton-Bezerra/ports-and-adapter/app"
+	_ "github.com/mattn/go-sqlite3"
+)
+
+type ProductDb struct {
+	db *sql.DB
+}
+
+func (p *ProductDb) Save(product app.ProductInterface) (app.ProductInterface, error) {
+
+}
+
+func (p *ProductDb) Get(id string) (app.ProductInterface, error) {
+	var product app.Product
+
+	stmt, err := p.db.Prepare("select id, name, price, status from products where id=?")
+	if err != nil {
+		return nil, err
+	}
+
+	err = stmt.QueryRow(id).Scan(&product.ID, &product.Name, &product.Price, &product.Status)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &product, nil
+}
