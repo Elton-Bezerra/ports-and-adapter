@@ -65,5 +65,17 @@ func TestProduct_IsValid(t *testing.T) {
 	product.Status = ""
 	_, err = product.IsValid()
 	require.Equal(t, "Name: non zero value required", err.Error())
+}
 
+func Test_Product_Getters(t *testing.T) {
+	product := app.Product{}
+	product.Name = "This is a test"
+	product.ID = "d5664464-d8a2-41a7-aa67-78d724b0f61a"
+	product.Status = app.ENABLED
+	product.Price = 199.99
+
+	require.Equal(t, "This is a test", product.GetName())
+	require.Equal(t, "enabled", product.GetStatus())
+	require.Equal(t, 199.99, product.GetPrice())
+	require.Equal(t, "d5664464-d8a2-41a7-aa67-78d724b0f61a", product.GetID())
 }
