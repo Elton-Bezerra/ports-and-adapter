@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/Elton-Bezerra/ports-and-adapter/app"
@@ -27,5 +28,10 @@ func getProduct(service app.ProductServiceInterface) http.Handler {
 			return
 		}
 
+		err = json.NewEncoder(w).Encode(product)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	})
 }
