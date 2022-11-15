@@ -57,7 +57,7 @@ func Run(service app.ProductServiceInterface, action string, productId string, p
 		}
 
 		result = fmt.Sprintf(
-			"Product ID: %s\n Product Name: %s\n Product Price: %f\n Product Status: %s",
+			"Product ID: %s\nProduct Name: %s\nProduct Price: %f\nProduct Status: %s",
 			res.GetID(),
 			res.GetName(),
 			res.GetPrice(),
